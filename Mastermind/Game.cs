@@ -1,17 +1,19 @@
-using System;
 using System.Collections.Generic;
 
 namespace Mastermind {
     public class Game {
 
+        public IColourInitialiser ColourInitialiser { get; set; }
         private static readonly string[] PossibleColours = {"Red", "Blue", "Green", "Orange", "Purple", "Yellow"};
-        private static readonly string[] GameColours = new string[4];
-        public Game() {
-            var r = new Random();
-            for (var i = 0; i < 4; i++) {
-                var randomIndex = r.Next(PossibleColours.Length);
-                GameColours[i] = PossibleColours[randomIndex];
-            }
+        private static string[] GameColours = new string[4];
+        
+        public Game(IColourInitialiser colourInitialiser) {
+            ColourInitialiser = colourInitialiser;
+            InitiateGameColours();
+        }
+
+        private void InitiateGameColours() {
+            GameColours = ColourInitialiser.InitiateGameColours(PossibleColours);
         }
 
         public static IEnumerable<string> mastermind(string[] input) {
