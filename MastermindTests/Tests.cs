@@ -4,36 +4,37 @@ using Xunit;
 
 namespace MastermindTests {
     
-    class FakeColourInitialiser:IColourInitialiser {
-        public string[] InitiateGameColours(string[] possibleColours) {
-            return new[] {"Red", "Blue", "Green", "Yellow"};
+    internal class FakeColourInitialiser:IColourInitialiser {
+        public string[] InitiateGameColours(string[] fakeColours) {
+            return fakeColours;
         }
     }
     
     public class Mastermind {
         
-        private Game game;
+        private readonly IColourInitialiser _fci;
         
         public Mastermind() {
-            var fci = new FakeColourInitialiser();
-            game = new Game(fci);  
+            _fci = new FakeColourInitialiser();
         }
         
         [Fact]
         public void TakesStringArrayAndReturns() {
-            var input = new[] {"Red", "Blue", "Green", "Yellow"};
-            var output = Game.mastermind(input);
+            var fakeColours = new[] {"Red", "Blue", "Green", "Yellow"};
+            var guess = new[] {"Red", "Blue", "Green", "Yellow"};
+            var game = new Game(fakeColours, _fci);
+            var output = game.Mastermind(guess);
             Assert.NotNull(output);
         }
         
         [Fact]
         public void TakesStringArrayAndReturnsBlackElements() {
-            var input = new[] {"Red", "Blue", "Green", "Yellow"};
-            var expectedSubstring = "Black";
-            var output = Game.mastermind(input);
-            Assert.Equal(expectedSubstring, output.ToArray()[0]);
-            Assert.Equal(expectedSubstring, output.ToArray()[1]);
-            Assert.Equal(expectedSubstring, output.ToArray()[2]);
+            var fakeColours = new[] {"Red", "Blue", "Green", "Yellow"};
+            var guess = new[] {"Red", "Blue", "Green", "Yellow"};
+            var expectedArray = new[] {"Black", "Black", "Black", "Black"};
+            var game = new Game(fakeColours, _fci);
+            var output = game.Mastermind(guess);
+            Assert.Equal(expectedArray, output);
         }
     }
 }

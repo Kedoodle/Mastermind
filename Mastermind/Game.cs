@@ -2,24 +2,25 @@ using System.Collections.Generic;
 
 namespace Mastermind {
     public class Game {
-
-        public IColourInitialiser ColourInitialiser { get; set; }
-        private static readonly string[] PossibleColours = {"Red", "Blue", "Green", "Orange", "Purple", "Yellow"};
-        private static string[] GameColours = new string[4];
         
-        public Game(IColourInitialiser colourInitialiser) {
-            ColourInitialiser = colourInitialiser;
+        private readonly IColourInitialiser _colourInitialiser;
+        private static string[] _possibleColours;
+        private static string[] _gameColours;
+        
+        public Game(string[] possibleColours, IColourInitialiser colourInitialiser) {
+            _possibleColours = possibleColours;
+            _colourInitialiser = colourInitialiser;
             InitiateGameColours();
         }
 
         private void InitiateGameColours() {
-            GameColours = ColourInitialiser.InitiateGameColours(PossibleColours);
+            _gameColours = _colourInitialiser.InitiateGameColours(_possibleColours);
         }
 
-        public static IEnumerable<string> mastermind(string[] input) {
+        public IEnumerable<string> Mastermind(string[] guess) {
             var output = new List<string>();
             for (var i = 0; i < 4; i++) {
-                if (input[i] == GameColours[i]) {
+                if (guess[i] == _gameColours[i]) {
                     output.Add("Black");
                 }
             }
